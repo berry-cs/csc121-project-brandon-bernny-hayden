@@ -6,11 +6,10 @@ import processing.event.KeyEvent;
  * Represents an interactive application where a player can move and hit 
  * enemies with ships while moving and enemies firing back
  */
-public class GameWorld {
+public class GameWorld implements IWorld {
     private Player p;
     private Bullets bullets;
     private Enemies enemies;
-    private LeaderBoard lb;
     private static final int TEXT_SIZE_World = 20;
     private static final int TEXT_COLOR_World = 255;
     private static final int PLAYER_START_POSITION = 200;
@@ -30,7 +29,6 @@ public class GameWorld {
         p = new Player(PLAYER_START_POSITION, playerImg);
         bullets = new Bullets(bulletImg);
         enemies = new Enemies(enemyImg, explosion);
-        lb = new LeaderBoard();
         gameOver = gameOver();
         this.playerImg = playerImg;
         this.bulletImg = bulletImg;
@@ -43,15 +41,7 @@ public class GameWorld {
      * Renders a picture of the Player and Bullets on the canvas
      */
     public PApplet draw(PApplet c) {
-    	if(gameOver()) {
-    		lb.setScore(enemies.getScore()+"");
-            lb.draw(c); 
-            lb.setBeenThrough();
-            
-            if (lb.getRestart()) {
-            	restart();
-            }
-    	} else {
+    	
             enemies.removeDead();
             c.background(0);
             p.draw(c);
@@ -62,7 +52,7 @@ public class GameWorld {
             c.fill(TEXT_COLOR_World);
             String score = enemies.getScore() + "";
             c.text(("SCORE: " + score), c.width - 90, 40);
-    	}
+            
         return c;
     }
 
@@ -82,11 +72,14 @@ public class GameWorld {
     /**
      * Produces an updated world where the player moves left or right and the bullets fly up the screen
      */
-    public GameWorld update() {
+    public IWorld update() {
+    	if (gameOver()) {
+    		return new EndWorld(this);
+    	}
+    	
         enemies.updateEnemies(bullets);
         p.updatePlayer();
         bullets.updateBullets();
-        
         
         return this;
     }
@@ -95,17 +88,16 @@ public class GameWorld {
     /**
      * Produces an updated world where the player moves and adds bullets to the Bullets class
      */
-    public GameWorld keyPressed(KeyEvent key) {
+    public IWorld keyPressed(KeyEvent key) {
         p = p.keyPress(key);
         bullets.addBullets(p, key);
-        lb.keyPress(key);
         return this;
     }
 
     /**
      * Produces an updated world where the player is not allowed to move
      */
-    public GameWorld keyReleased(KeyEvent key) {
+    public IWorld keyReleased(KeyEvent key) {
         p.keyReleased(key);
         return this;
     }
@@ -114,7 +106,6 @@ public class GameWorld {
         p = new Player(PLAYER_START_POSITION, playerImg);
         bullets = new Bullets(bulletImg);
         enemies = new Enemies(enemyImg, explosion);
-        lb = new LeaderBoard();
         return this;
     }
     

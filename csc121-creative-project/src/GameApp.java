@@ -5,7 +5,7 @@ import processing.event.KeyEvent;
  * Provides the scaffolding to launch a Processing application
  */
 public class GameApp extends PApplet {
-    private GameWorld gw;
+    private IWorld gw;
     private static PImage playerImg;
     private static PImage enemyImg;
     private static PImage bulletImg;

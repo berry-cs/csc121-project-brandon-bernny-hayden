@@ -50,10 +50,10 @@ public class Player extends PApplet {
         } else if (key.getKeyCode() == 37) {
             this.setMovingLeft(true);
             this.setMovingRight(false);
-        } else {
+        } /*else {
             this.setMovingLeft(false);
             this.setMovingRight(false);
-        }
+        }*/
         return this;
     }
 
