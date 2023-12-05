@@ -13,6 +13,7 @@ public class Bullet {
     private float bBottom;
     private float bRight;
     private float bLeft;
+    private boolean isDead = false;
     
     private static final float SPEED = 5; // Bullet speed
     private static final float BULLET_HITBOX_OFFSET = 1; // Constant for bullet hitbox offset
@@ -46,13 +47,31 @@ public class Bullet {
     /*
      * Returns an updated bullet to a new y position
      */
-    public Bullet update() {
-        if (this.y < 400) {
-            this.y -= SPEED;
-            setbTop(y - BULLET_HITBOX_OFFSET);
-            setbBottom(y + BULLET_HITBOX_OFFSET);
-        }
+    public Bullet update(Enemies e) {
+        // Check for collisions with enemies
+    	for (int i = 0; i < e.getEnemies().size(); i++) {
+    		if(this.didhit(e.getEnemies().get(i))) {
+    			setDead();
+    			return this;
+    		}
+    		
+    	}
+    	
+    	if(!isDead()) {
+            if (this.y < 400) {
+                this.y -= SPEED;
+                setbTop(y - BULLET_HITBOX_OFFSET);
+                setbBottom(y + BULLET_HITBOX_OFFSET);
+            }
+    	}
+    	
+    	
+
         return this;
+    }
+    
+    public boolean didhit(Enemy e) {
+    	return (this.getbTop() < e.getEBottom()) && ((this.getbRight() > e.getELeft() && this.getbLeft() < e.getELeft()) || ((this.getbLeft() < e.getERight()) && (this.getbRight() > e.getERight())) || ((this.getbLeft() > e.getELeft()) && (this.getbRight() < e.getERight())));
     }
 
     /*
@@ -104,10 +123,17 @@ public class Bullet {
         return bBottom;
     }
 
+    public boolean isDead() {
+    	return isDead;
+    }
     /*
      * Sets the bullet bottom hitbox boundary
      */
     public void setbBottom(float bBottom) {
         this.bBottom = bBottom;
+    }
+    
+    public void setDead() {
+    	isDead = true;
     }
 }

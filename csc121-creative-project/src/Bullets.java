@@ -33,12 +33,27 @@ public class Bullets {
     /*
      * Updates all the bullets in the ArrayList to a new y position
      */
-    public void updateBullets() {
+    public void updateBullets(Enemies e) {
+    	
+      
+        
         for (int i = bullets.size() - 1; i >= 0; i--) {
             Bullet curBullet = bullets.get(i);
-            curBullet.update();
+
+            curBullet.update(e);
+
+
+            // Remove dead bullets
+            if (curBullet.isDead()) {
+                bullets.remove(i);
+            }
+            
+            
         }
-    }
+        }
+        
+        	
+    
 
     /*
      * If the spacebar is pressed, it will add a new bullet to the ArrayList at the player's x position

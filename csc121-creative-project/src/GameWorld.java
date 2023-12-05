@@ -28,7 +28,7 @@ public class GameWorld implements IWorld {
     public GameWorld(PImage playerImg, PImage bulletImg, PImage enemyImg, PImage explosion) {
         p = new Player(PLAYER_START_POSITION, playerImg);
         bullets = new Bullets(bulletImg);
-        enemies = new Enemies(enemyImg, explosion);
+        enemies = new Enemies(enemyImg, explosion, p);
         gameOver = gameOver();
         this.playerImg = playerImg;
         this.bulletImg = bulletImg;
@@ -79,7 +79,7 @@ public class GameWorld implements IWorld {
     	
         enemies.updateEnemies(bullets);
         p.updatePlayer();
-        bullets.updateBullets();
+        bullets.updateBullets(enemies);
         
         return this;
     }
@@ -105,7 +105,7 @@ public class GameWorld implements IWorld {
     public GameWorld restart() {
         p = new Player(PLAYER_START_POSITION, playerImg);
         bullets = new Bullets(bulletImg);
-        enemies = new Enemies(enemyImg, explosion);
+        enemies = new Enemies(enemyImg, explosion, p);
         return this;
     }
     
